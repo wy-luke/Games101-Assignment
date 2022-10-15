@@ -53,7 +53,12 @@ static bool insideTriangle(int x, int y, const Vector3f *_v)
     float z2 = bc.cross(bp).z();
     float z3 = ca.cross(cp).z();
 
-    return (z1 > 0 && z2 > 0 && z3 > 0) || (z1 < 0 && z2 < 0 && z3 < 0);
+    // hpp 中有说明 _v[0], _v[1], _v[2] 为逆时针，且默认为右手系
+    // 所以全 >0 代表点 p 均在 ab bc ca 的左侧，所以在三角形内部
+    return z1 > 0 && z2 > 0 && z3 > 0;
+
+    // 下面的判断最全面
+    // return (z1 > 0 && z2 > 0 && z3 > 0) || (z1 < 0 && z2 < 0 && z3 < 0);
 }
 
 static std::tuple<float, float, float> computeBarycentric2D(float x, float y, const Vector3f *v)
