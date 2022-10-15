@@ -128,16 +128,18 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t)
     int xmax = v[0].x(), ymax = v[0].y();
     for (const auto &p : v)
     {
+        // 一个像素的坐标为其 左下角 的坐标
         xmin = std::min(xmin, (int)p.x());
-        xmax = std::max(xmax, (int)p.x() + 1);
+        xmax = std::max(xmax, (int)p.x());
         ymin = std::min(ymin, (int)p.y());
-        ymax = std::max(ymax, (int)p.y() + 1);
+        ymax = std::max(ymax, (int)p.y());
     }
     // Iterate through the pixel and find if the current pixel is inside the triangle.
     for (int x = xmin; x <= xmax; ++x)
     {
         for (int y = ymin; y <= ymax; ++y)
         {
+            // 像素的坐标为其 左下角 的坐标，所以中心点需要 +0.5f
             if (insideTriangle(x + 0.5f, y + 0.5f, t.v))
             {
                 // If so, use the following code to get the interpolated z value.
@@ -150,7 +152,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t)
                 {
                     depth_buf[get_index(x, y)] = z_interpolated;
                     // Set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
-                    set_pixel(Eigen::Vector3f{x, y, 1.0f}, t.getColor());
+                    set_pixel(Eigen::Vector3f{x, y, 1}, t.getColor());
                 }
             }
         }
